@@ -26,18 +26,6 @@ if not os.path.exists(USED_QUESTIONS_FILE):
         json.dump([], f)
 
 # =========================================================
-# GEMINI CONFIG
-# =========================================================
-api_key = st.secrets.get("GEMINI_API_KEY", None)
-
-if not api_key:
-    st.error("Missing GEMINI_API_KEY in Streamlit secrets.")
-    st.stop()
-
-genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-1.5-flash")
-
-# =========================================================
 # CONSTANTS
 # =========================================================
 ALL_CATEGORIES = [
@@ -84,50 +72,7 @@ WORD_SCRAMBLE_BANK = [
 ]
 
 # =========================================================
-# APP HEADER
-# =========================================================
-if os.path.exists(LOGO_FILE):
-    col1, col2, col3 = st.columns([1, 2, 1])
-    with col2:
-        logo = Image.open(LOGO_FILE)
-        st.image(logo, width=220)
-
-st.title("Trivia with the GM")
-st.caption("Country Club Trivia Night Generator • Gemini AI Version")
-
-st.markdown("""
-Designed for an adult country club audience with a broad age range and generally strong general knowledge.
-
-### Game 1
-- Round 1: easy
-- Round 2: medium
-- Round 3: hard
-- 10 questions per round
-
-### Game 2
-- 15 questions
-- mixed difficulty
-- includes 2 Name That Tune
-- includes 2 Word Scramble
-
-This version uses **Gemini AI** to generate fresh questions.
-""")
-
-# =========================================================
-# SESSION STATE
-# =========================================================
-def init_state():
-    if "game1" not in st.session_state:
-        st.session_state.game1 = []
-    if "game2" not in st.session_state:
-        st.session_state.game2 = []
-    if "saved_name" not in st.session_state:
-        st.session_state.saved_name = ""
-
-init_state()
-
-# =========================================================
-# FILE HELPERS
+# HELPERS: FILE IO
 # =========================================================
 def load_json_file(path, default=None):
     if default is None:
@@ -161,6 +106,84 @@ def add_questions_to_history(questions):
     save_used_questions(history)
 
 # =========================================================
+# GEMINI CONFIG
+# =========================================================
+api_key = st.secrets.get("GEMINI_API_KEY", None)
+
+if not api_key:
+    st.error("Missing GEMINI_API_KEY in Streamlit secrets.")
+    st.stop()
+
+genai.configure(api_key=api_key)
+
+def get_gemini_model():
+    candidate_models = [
+        "gemini-1.5-flash-latest",
+        "gemini-1.5-pro-latest",
+        "gemini-1.5-flash",
+        "gemini-1.5-pro"
+    ]
+
+    for model_name in candidate_models:
+        try:
+            test_model = genai.GenerativeModel(model_name)
+            response = test_model.generate_content("Reply with only the word OK.")
+            if response:
+                return test_model, model_name
+        except Exception:
+            continue
+
+    return None, None
+
+model, active_model_name = get_gemini_model()
+
+if model is None:
+    st.error("No supported Gemini model was found for your API key.")
+    st.info("Please confirm your Gemini API access and model availability.")
+    st.stop()
+
+# =========================================================
+# APP HEADER
+# =========================================================
+if os.path.exists(LOGO_FILE):
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        logo = Image.open(LOGO_FILE)
+        st.image(logo, width=220)
+
+st.title("Trivia with the GM")
+st.caption("Country Club Trivia Night Generator • Gemini AI Version")
+
+st.markdown("""
+Designed for an adult country club audience with a broad age range and strong general knowledge.
+
+### Game 1
+- Round 1: easy
+- Round 2: medium
+- Round 3: hard
+- 10 questions per round
+
+### Game 2
+- 15 questions
+- mixed difficulty
+- includes 2 Name That Tune
+- includes 2 Word Scramble
+""")
+
+# =========================================================
+# SESSION STATE
+# =========================================================
+def init_state():
+    if "game1" not in st.session_state:
+        st.session_state.game1 = []
+    if "game2" not in st.session_state:
+        st.session_state.game2 = []
+    if "saved_name" not in st.session_state:
+        st.session_state.saved_name = ""
+
+init_state()
+
+# =========================================================
 # WORD SCRAMBLE
 # =========================================================
 def shuffle_word(word):
@@ -183,7 +206,7 @@ def generate_word_scramble(difficulty="medium"):
     }
 
 # =========================================================
-# GEMINI PROMPTS
+# AI HELPERS
 # =========================================================
 def get_recent_history_text(limit=80):
     history = load_used_questions()
@@ -207,12 +230,12 @@ def generate_ai_questions(category, difficulty, count):
 
     if category == "Name That Tune":
         prompt = f"""
-Generate {count} high-quality trivia questions for a country club trivia night.
+Generate {count} high-quality trivia items for a country club trivia night.
 
 Audience:
 - Adults age 18-70
 - High school graduates
-- Most have 2-4 years of college
+- Most have 2-4 years of college education
 - Questions should feel polished, fair, and enjoyable
 
 Category: Name That Tune
@@ -221,9 +244,9 @@ Difficulty: {difficulty}
 Requirements:
 - Return ONLY valid JSON
 - Return a JSON array of exactly {count} objects
-- Do not repeat or closely resemble any prior used questions from the history below
+- Do not repeat or closely resemble prior used questions listed below
 - Songs should be popular and recognizable from roughly the last 50 years
-- For each item include:
+- Include:
   - category
   - difficulty
   - question
@@ -235,9 +258,10 @@ Requirements:
   - release_date
   - clip_length
   - sources
-- The question should say that the host should play the opening of the song
+- The question should tell the host to play the opening of the song
 - sources must contain at least 1 reputable source
 - Keep metadata accurate
+- Avoid markdown
 
 Used question history to avoid:
 {history_text}
@@ -249,7 +273,7 @@ JSON format:
     "difficulty": "{difficulty}",
     "question": "Name That Tune: Play the opening of this song.",
     "answer": "Song Title",
-    "notes": "Host note",
+    "notes": "Accept song title.",
     "song": "Song Title",
     "writers": "Writer names",
     "performer": "Best known performer",
@@ -266,7 +290,7 @@ Generate {count} high-quality trivia questions for a country club trivia night.
 Audience:
 - Adults age 18-70
 - High school graduates
-- Most have 2-4 years of college
+- Most have 2-4 years of college education
 - Questions should feel polished, fair, and enjoyable
 
 Category: {category}
@@ -275,10 +299,10 @@ Difficulty: {difficulty}
 Requirements:
 - Return ONLY valid JSON
 - Return a JSON array of exactly {count} objects
-- Do not repeat or closely resemble any prior used questions from the history below
+- Do not repeat or closely resemble prior used questions listed below
 - Questions should be fact-based and suitable for live trivia
 - Avoid childish or overly obscure trivia
-- Every item must include:
+- Include:
   - category
   - difficulty
   - question
@@ -286,7 +310,8 @@ Requirements:
   - notes
   - sources
 - sources must contain at least 1 reputable source
-- Current events questions should be timely if possible, but still factually cautious and sourceable
+- Current events questions should be timely if possible, but still carefully sourceable
+- Avoid markdown
 
 Used question history to avoid:
 {history_text}
@@ -304,11 +329,10 @@ JSON format:
 ]
 """
 
-    response = model.generate_content(prompt)
-    raw_text = response.text
-    json_text = extract_json_from_text(raw_text)
-
     try:
+        response = model.generate_content(prompt)
+        raw_text = response.text if hasattr(response, "text") else ""
+        json_text = extract_json_from_text(raw_text)
         data = json.loads(json_text)
         if isinstance(data, dict):
             data = [data]
@@ -320,21 +344,23 @@ def clean_ai_question(item, category, difficulty):
     q = {
         "category": item.get("category", category),
         "difficulty": item.get("difficulty", difficulty),
-        "question": item.get("question", "").strip(),
-        "answer": item.get("answer", "").strip(),
-        "notes": item.get("notes", "").strip(),
+        "question": str(item.get("question", "")).strip(),
+        "answer": str(item.get("answer", "")).strip(),
+        "notes": str(item.get("notes", "")).strip(),
         "sources": item.get("sources", [])
     }
 
     if not isinstance(q["sources"], list):
         q["sources"] = [str(q["sources"])]
 
+    q["sources"] = [str(s).strip() for s in q["sources"] if str(s).strip()]
+
     if category == "Name That Tune":
-        q["song"] = item.get("song", "").strip()
-        q["writers"] = item.get("writers", "").strip()
-        q["performer"] = item.get("performer", "").strip()
-        q["release_date"] = item.get("release_date", "").strip()
-        q["clip_length"] = item.get("clip_length", "").strip()
+        q["song"] = str(item.get("song", "")).strip()
+        q["writers"] = str(item.get("writers", "")).strip()
+        q["performer"] = str(item.get("performer", "")).strip()
+        q["release_date"] = str(item.get("release_date", "")).strip()
+        q["clip_length"] = str(item.get("clip_length", "")).strip()
 
     return q
 
@@ -372,12 +398,12 @@ def safe_pick(pool, count):
 
 def generate_game_1():
     rounds = []
+    all_generated = []
     round_specs = [
         ("Round 1", "easy"),
         ("Round 2", "medium"),
         ("Round 3", "hard")
     ]
-    all_generated = []
 
     for round_name, difficulty in round_specs:
         categories = safe_pick(ALL_CATEGORIES, 10)
@@ -609,13 +635,19 @@ def render_question_editor(round_index, q, q_idx, game_key):
             q["category"] = st.text_input("Category", value=q["category"], key=f"{prefix}_category")
         with c2:
             if st.button("🔄 Replace This Question", key=f"{prefix}_replace"):
-                replace_question(game_key, round_index, q_idx)
+                with st.spinner("Replacing question..."):
+                    replace_question(game_key, round_index, q_idx)
                 st.rerun()
+
+        diff_options = ["easy", "medium", "hard", "mixed"]
+        current_diff = q.get("difficulty", "medium")
+        if current_diff not in diff_options:
+            current_diff = "medium"
 
         q["difficulty"] = st.selectbox(
             "Difficulty",
-            ["easy", "medium", "hard", "mixed"],
-            index=["easy", "medium", "hard", "mixed"].index(q.get("difficulty", "medium")) if q.get("difficulty", "medium") in ["easy", "medium", "hard", "mixed"] else 1,
+            diff_options,
+            index=diff_options.index(current_diff),
             key=f"{prefix}_difficulty"
         )
 
@@ -660,6 +692,7 @@ def render_rounds(rounds, game_key):
 # SIDEBAR
 # =========================================================
 st.sidebar.header("Controls")
+st.sidebar.success(f"Using Gemini model: {active_model_name}")
 
 if st.sidebar.button("Generate Game 1"):
     with st.spinner("Generating Game 1..."):
@@ -778,14 +811,14 @@ with tab5:
 ### How to use
 1. Click **Generate Both Games**
 2. Review each round
-3. Click **Replace This Question** if needed
+3. Use **Replace This Question** if needed
 4. Edit any wording manually if desired
 5. Save the game
 6. Download the Host PDF and Score Sheets
 
 ### AI generation
-- This version uses **Gemini AI**
-- It tries to avoid repeating previously used questions
+- This version uses Gemini AI
+- It tries multiple Gemini model names automatically
 - It stores used questions in `used_questions.json`
 
 ### Important review
@@ -796,7 +829,7 @@ Please review before use, especially:
 - Name That Tune writer / release date metadata
 
 ### Streamlit Cloud note
-File-based history and saves may not be permanently preserved forever on Community Cloud.
+File-based history and saved games may not persist forever on Community Cloud.
 For long-term recordkeeping, download JSON and PDFs.
 """)
 
