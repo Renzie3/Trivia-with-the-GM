@@ -7,53 +7,39 @@ from datetime import datetime
 from PIL import Image
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
+import google.generativeai as genai
 
 st.set_page_config(page_title="Trivia with the GM", layout="wide")
 
 # =========================================================
 # FILE PATHS
 # =========================================================
-QUESTION_BANK_FILE = "question_bank.json"
-CURRENT_EVENTS_FILE = "current_events.json"
 SAVED_GAMES_DIR = "saved_games"
+USED_QUESTIONS_FILE = "used_questions.json"
 LOGO_FILE = "logo.png"
 
 if not os.path.exists(SAVED_GAMES_DIR):
     os.makedirs(SAVED_GAMES_DIR)
 
+if not os.path.exists(USED_QUESTIONS_FILE):
+    with open(USED_QUESTIONS_FILE, "w", encoding="utf-8") as f:
+        json.dump([], f)
+
 # =========================================================
-# LOADERS
+# GEMINI CONFIG
 # =========================================================
-def load_json_file(path, default=None):
-    if default is None:
-        default = {}
-    try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return default
+api_key = st.secrets.get("GEMINI_API_KEY", None)
 
-QUESTION_BANK = load_json_file(QUESTION_BANK_FILE, {})
-CURRENT_EVENTS = load_json_file(CURRENT_EVENTS_FILE, {})
+if not api_key:
+    st.error("Missing GEMINI_API_KEY in Streamlit secrets.")
+    st.stop()
 
-# Merge curated current events into the main bank
-for cat, items in CURRENT_EVENTS.items():
-    QUESTION_BANK.setdefault(cat, [])
-    QUESTION_BANK[cat].extend(items)
+genai.configure(api_key=api_key)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-WORD_SCRAMBLE_BANK = [
-    {"word": "TREASURE", "clue": "Something worth keeping safe", "sources": ["https://www.merriam-webster.com/dictionary/treasure"]},
-    {"word": "ATHLETIC", "clue": "Related to sports or physical skill", "sources": ["https://www.merriam-webster.com/dictionary/athletic"]},
-    {"word": "HORIZONS", "clue": "What may broaden when you learn more", "sources": ["https://www.merriam-webster.com/dictionary/horizon"]},
-    {"word": "LANDMARK", "clue": "A notable point of reference", "sources": ["https://www.merriam-webster.com/dictionary/landmark"]},
-    {"word": "JUDICIAL", "clue": "Connected to courts or judges", "sources": ["https://www.merriam-webster.com/dictionary/judicial"]},
-    {"word": "PLAYBOOK", "clue": "A set of planned actions", "sources": ["https://www.merriam-webster.com/dictionary/playbook"]},
-    {"word": "HEADLINE", "clue": "Something that catches public attention", "sources": ["https://www.merriam-webster.com/dictionary/headline"]},
-    {"word": "NOTEBOOK", "clue": "A place to keep ideas", "sources": ["https://www.merriam-webster.com/dictionary/notebook"]},
-    {"word": "CHAMPION", "clue": "A winner at the highest level", "sources": ["https://www.merriam-webster.com/dictionary/champion"]},
-    {"word": "ELECTION", "clue": "A public choice process", "sources": ["https://www.merriam-webster.com/dictionary/election"]}
-]
-
+# =========================================================
+# CONSTANTS
+# =========================================================
 ALL_CATEGORIES = [
     "Geography",
     "History",
@@ -84,6 +70,19 @@ STANDARD_CATEGORIES = [
     "World Records"
 ]
 
+WORD_SCRAMBLE_BANK = [
+    {"word": "TREASURE", "clue": "Something worth keeping safe", "sources": ["https://www.merriam-webster.com/dictionary/treasure"]},
+    {"word": "ATHLETIC", "clue": "Related to sports or physical skill", "sources": ["https://www.merriam-webster.com/dictionary/athletic"]},
+    {"word": "HORIZONS", "clue": "What may broaden when you learn more", "sources": ["https://www.merriam-webster.com/dictionary/horizon"]},
+    {"word": "LANDMARK", "clue": "A notable point of reference", "sources": ["https://www.merriam-webster.com/dictionary/landmark"]},
+    {"word": "JUDICIAL", "clue": "Connected to courts or judges", "sources": ["https://www.merriam-webster.com/dictionary/judicial"]},
+    {"word": "PLAYBOOK", "clue": "A set of planned actions", "sources": ["https://www.merriam-webster.com/dictionary/playbook"]},
+    {"word": "HEADLINE", "clue": "Something that catches public attention", "sources": ["https://www.merriam-webster.com/dictionary/headline"]},
+    {"word": "NOTEBOOK", "clue": "A place to keep ideas", "sources": ["https://www.merriam-webster.com/dictionary/notebook"]},
+    {"word": "CHAMPION", "clue": "A winner at the highest level", "sources": ["https://www.merriam-webster.com/dictionary/champion"]},
+    {"word": "ELECTION", "clue": "A public choice process", "sources": ["https://www.merriam-webster.com/dictionary/election"]}
+]
+
 # =========================================================
 # APP HEADER
 # =========================================================
@@ -94,18 +93,24 @@ if os.path.exists(LOGO_FILE):
         st.image(logo, width=220)
 
 st.title("Trivia with the GM")
-st.caption("Country Club Trivia Night Generator • Version 3")
+st.caption("Country Club Trivia Night Generator • Gemini AI Version")
 
 st.markdown("""
-Designed for an adult country club audience with broad general knowledge and mixed age ranges.
-- **Game 1:** 3 rounds × 10 questions
-  - Round 1 = easier
-  - Round 2 = medium
-  - Round 3 = harder
-- **Game 2:** 1 round × 15 questions
-  - mixed difficulty
-  - includes **2 Name That Tune**
-  - includes **2 Word Scramble**
+Designed for an adult country club audience with a broad age range and generally strong general knowledge.
+
+### Game 1
+- Round 1: easy
+- Round 2: medium
+- Round 3: hard
+- 10 questions per round
+
+### Game 2
+- 15 questions
+- mixed difficulty
+- includes 2 Name That Tune
+- includes 2 Word Scramble
+
+This version uses **Gemini AI** to generate fresh questions.
 """)
 
 # =========================================================
@@ -122,7 +127,41 @@ def init_state():
 init_state()
 
 # =========================================================
-# HELPERS
+# FILE HELPERS
+# =========================================================
+def load_json_file(path, default=None):
+    if default is None:
+        default = {}
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return default
+
+def save_json_file(path, data):
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, indent=2)
+
+def load_used_questions():
+    return load_json_file(USED_QUESTIONS_FILE, [])
+
+def save_used_questions(data):
+    save_json_file(USED_QUESTIONS_FILE, data)
+
+def add_questions_to_history(questions):
+    history = load_used_questions()
+    for q in questions:
+        history.append({
+            "question": q.get("question", ""),
+            "answer": q.get("answer", ""),
+            "category": q.get("category", ""),
+            "difficulty": q.get("difficulty", ""),
+            "timestamp": datetime.now().isoformat()
+        })
+    save_used_questions(history)
+
+# =========================================================
+# WORD SCRAMBLE
 # =========================================================
 def shuffle_word(word):
     chars = list(word)
@@ -132,77 +171,195 @@ def shuffle_word(word):
         if scrambled != word:
             return scrambled
 
-def generate_word_scramble():
+def generate_word_scramble(difficulty="medium"):
     item = random.choice(WORD_SCRAMBLE_BANK)
     return {
         "category": "Word Scramble",
-        "difficulty": random.choice(["easy", "medium", "hard"]),
+        "difficulty": difficulty,
         "question": f"Unscramble this {len(item['word'])}-letter word: {shuffle_word(item['word'])}",
         "answer": item["word"],
         "notes": f"Vague clue: {item['clue']}",
         "sources": item["sources"]
     }
 
-def normalize_question(category, item):
+# =========================================================
+# GEMINI PROMPTS
+# =========================================================
+def get_recent_history_text(limit=80):
+    history = load_used_questions()
+    recent = history[-limit:] if history else []
+    return json.dumps(recent, indent=2)
+
+def extract_json_from_text(text):
+    text = text.strip()
+    start = text.find("[")
+    end = text.rfind("]")
+    if start != -1 and end != -1 and end > start:
+        return text[start:end + 1]
+    start = text.find("{")
+    end = text.rfind("}")
+    if start != -1 and end != -1 and end > start:
+        return text[start:end + 1]
+    return text
+
+def generate_ai_questions(category, difficulty, count):
+    history_text = get_recent_history_text()
+
+    if category == "Name That Tune":
+        prompt = f"""
+Generate {count} high-quality trivia questions for a country club trivia night.
+
+Audience:
+- Adults age 18-70
+- High school graduates
+- Most have 2-4 years of college
+- Questions should feel polished, fair, and enjoyable
+
+Category: Name That Tune
+Difficulty: {difficulty}
+
+Requirements:
+- Return ONLY valid JSON
+- Return a JSON array of exactly {count} objects
+- Do not repeat or closely resemble any prior used questions from the history below
+- Songs should be popular and recognizable from roughly the last 50 years
+- For each item include:
+  - category
+  - difficulty
+  - question
+  - answer
+  - notes
+  - song
+  - writers
+  - performer
+  - release_date
+  - clip_length
+  - sources
+- The question should say that the host should play the opening of the song
+- sources must contain at least 1 reputable source
+- Keep metadata accurate
+
+Used question history to avoid:
+{history_text}
+
+JSON format:
+[
+  {{
+    "category": "Name That Tune",
+    "difficulty": "{difficulty}",
+    "question": "Name That Tune: Play the opening of this song.",
+    "answer": "Song Title",
+    "notes": "Host note",
+    "song": "Song Title",
+    "writers": "Writer names",
+    "performer": "Best known performer",
+    "release_date": "Month Day, Year",
+    "clip_length": "4 seconds",
+    "sources": ["https://example.com"]
+  }}
+]
+"""
+    else:
+        prompt = f"""
+Generate {count} high-quality trivia questions for a country club trivia night.
+
+Audience:
+- Adults age 18-70
+- High school graduates
+- Most have 2-4 years of college
+- Questions should feel polished, fair, and enjoyable
+
+Category: {category}
+Difficulty: {difficulty}
+
+Requirements:
+- Return ONLY valid JSON
+- Return a JSON array of exactly {count} objects
+- Do not repeat or closely resemble any prior used questions from the history below
+- Questions should be fact-based and suitable for live trivia
+- Avoid childish or overly obscure trivia
+- Every item must include:
+  - category
+  - difficulty
+  - question
+  - answer
+  - notes
+  - sources
+- sources must contain at least 1 reputable source
+- Current events questions should be timely if possible, but still factually cautious and sourceable
+
+Used question history to avoid:
+{history_text}
+
+JSON format:
+[
+  {{
+    "category": "{category}",
+    "difficulty": "{difficulty}",
+    "question": "Question text",
+    "answer": "Answer text",
+    "notes": "Optional host note",
+    "sources": ["https://example.com"]
+  }}
+]
+"""
+
+    response = model.generate_content(prompt)
+    raw_text = response.text
+    json_text = extract_json_from_text(raw_text)
+
+    try:
+        data = json.loads(json_text)
+        if isinstance(data, dict):
+            data = [data]
+        return data
+    except Exception:
+        return []
+
+def clean_ai_question(item, category, difficulty):
     q = {
-        "category": category,
-        "difficulty": item.get("difficulty", "medium"),
-        "question": item.get("question", ""),
-        "answer": item.get("answer", ""),
-        "notes": item.get("notes", ""),
+        "category": item.get("category", category),
+        "difficulty": item.get("difficulty", difficulty),
+        "question": item.get("question", "").strip(),
+        "answer": item.get("answer", "").strip(),
+        "notes": item.get("notes", "").strip(),
         "sources": item.get("sources", [])
     }
+
+    if not isinstance(q["sources"], list):
+        q["sources"] = [str(q["sources"])]
+
     if category == "Name That Tune":
-        q["song"] = item.get("song", "")
-        q["writers"] = item.get("writers", "")
-        q["performer"] = item.get("performer", "")
-        q["release_date"] = item.get("release_date", "")
-        q["clip_length"] = item.get("clip_length", "")
+        q["song"] = item.get("song", "").strip()
+        q["writers"] = item.get("writers", "").strip()
+        q["performer"] = item.get("performer", "").strip()
+        q["release_date"] = item.get("release_date", "").strip()
+        q["clip_length"] = item.get("clip_length", "").strip()
+
     return q
 
-def get_questions_by_difficulty(category, difficulty):
+def generate_question(category, difficulty):
     if category == "Word Scramble":
-        return [generate_word_scramble()]
-    bank = QUESTION_BANK.get(category, [])
-    return [normalize_question(category, q) for q in bank if q.get("difficulty", "medium") == difficulty]
+        return generate_word_scramble(difficulty)
 
-def get_any_question(category):
-    if category == "Word Scramble":
-        return generate_word_scramble()
-    bank = QUESTION_BANK.get(category, [])
-    if not bank:
-        return {
-            "category": category,
-            "difficulty": "medium",
-            "question": f"Placeholder question for {category}",
-            "answer": "TBD",
-            "notes": "",
-            "sources": ["Add source"]
-        }
-    return normalize_question(category, random.choice(bank))
+    ai_items = generate_ai_questions(category, difficulty, 1)
+    if ai_items:
+        q = clean_ai_question(ai_items[0], category, difficulty)
+        if q["question"] and q["answer"]:
+            return q
 
-def get_question_for_round(category, difficulty, used_questions=None):
-    if used_questions is None:
-        used_questions = set()
+    return {
+        "category": category,
+        "difficulty": difficulty,
+        "question": f"Placeholder question for {category}",
+        "answer": "TBD",
+        "notes": "AI generation failed for this item. Try Replace This Question.",
+        "sources": ["Source needed"]
+    }
 
-    if category == "Word Scramble":
-        return generate_word_scramble()
-
-    choices = get_questions_by_difficulty(category, difficulty)
-    random.shuffle(choices)
-    for c in choices:
-        if c["question"] not in used_questions:
-            return c
-
-    # fallback to any difficulty in same category
-    fallback = [normalize_question(category, q) for q in QUESTION_BANK.get(category, [])]
-    random.shuffle(fallback)
-    for c in fallback:
-        if c["question"] not in used_questions:
-            return c
-
-    return get_any_question(category)
-
+# =========================================================
+# GAME GENERATION
+# =========================================================
 def safe_pick(pool, count):
     result = []
     local_pool = pool[:]
@@ -215,40 +372,37 @@ def safe_pick(pool, count):
 
 def generate_game_1():
     rounds = []
-    difficulties = [("Round 1", "easy"), ("Round 2", "medium"), ("Round 3", "hard")]
-    used = set()
+    round_specs = [
+        ("Round 1", "easy"),
+        ("Round 2", "medium"),
+        ("Round 3", "hard")
+    ]
+    all_generated = []
 
-    category_pool = ALL_CATEGORIES[:]
-
-    for round_name, difficulty in difficulties:
-        categories = safe_pick(category_pool, 10)
-        questions = []
-        for cat in categories:
-            q = get_question_for_round(cat, difficulty, used)
-            used.add(q["question"])
-            questions.append(q)
+    for round_name, difficulty in round_specs:
+        categories = safe_pick(ALL_CATEGORIES, 10)
+        questions = [generate_question(cat, difficulty) for cat in categories]
+        all_generated.extend(questions)
         rounds.append({
             "round_name": round_name,
             "round_difficulty": difficulty,
             "questions": questions
         })
+
+    add_questions_to_history(all_generated)
     return rounds
 
 def generate_game_2():
-    used = set()
     fixed = ["Name That Tune", "Name That Tune", "Word Scramble", "Word Scramble"]
     others = safe_pick(STANDARD_CATEGORIES, 11)
     categories = fixed + others
     random.shuffle(categories)
 
-    difficulty_mix = ["easy"] * 5 + ["medium"] * 5 + ["hard"] * 5
-    random.shuffle(difficulty_mix)
+    difficulties = ["easy"] * 5 + ["medium"] * 5 + ["hard"] * 5
+    random.shuffle(difficulties)
 
-    questions = []
-    for i, cat in enumerate(categories):
-        q = get_question_for_round(cat, difficulty_mix[i], used)
-        used.add(q["question"])
-        questions.append(q)
+    questions = [generate_question(cat, diff) for cat, diff in zip(categories, difficulties)]
+    add_questions_to_history(questions)
 
     return [{
         "round_name": "Game 2 - Mixed Difficulty Round",
@@ -256,6 +410,9 @@ def generate_game_2():
         "questions": questions
     }]
 
+# =========================================================
+# SAVE / LOAD
+# =========================================================
 def export_json_payload():
     return json.dumps({
         "title": "Trivia with the GM",
@@ -274,13 +431,10 @@ def save_current_games(save_name):
         "game_2": st.session_state.game2
     }
     path = os.path.join(SAVED_GAMES_DIR, f"{save_name.strip()}.json")
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(payload, f, indent=2)
+    save_json_file(path, payload)
     return True, f"Saved to {path}"
 
 def list_saved_games():
-    if not os.path.exists(SAVED_GAMES_DIR):
-        return []
     return sorted([f for f in os.listdir(SAVED_GAMES_DIR) if f.endswith(".json")])
 
 def load_saved_game(filename):
@@ -289,28 +443,21 @@ def load_saved_game(filename):
     st.session_state.game1 = data.get("game_1", [])
     st.session_state.game2 = data.get("game_2", [])
 
+# =========================================================
+# REPLACE QUESTION
+# =========================================================
 def replace_question(game_key, round_index, question_index):
     game = st.session_state[game_key]
     q = game[round_index]["questions"][question_index]
     category = q["category"]
     difficulty = q.get("difficulty", "medium")
-    current_text = q["question"]
-
-    if category == "Word Scramble":
-        new_q = generate_word_scramble()
-    else:
-        candidates = [normalize_question(category, item) for item in QUESTION_BANK.get(category, [])]
-        same_difficulty = [c for c in candidates if c.get("difficulty") == difficulty and c["question"] != current_text]
-        any_difficulty = [c for c in candidates if c["question"] != current_text]
-        if same_difficulty:
-            new_q = random.choice(same_difficulty)
-        elif any_difficulty:
-            new_q = random.choice(any_difficulty)
-        else:
-            new_q = get_any_question(category)
-
+    new_q = generate_question(category, difficulty)
     game[round_index]["questions"][question_index] = new_q
+    add_questions_to_history([new_q])
 
+# =========================================================
+# PDF HELPERS
+# =========================================================
 def draw_wrapped_text(pdf, text, x, y, max_width=500, line_height=14, font="Helvetica", font_size=10):
     pdf.setFont(font, font_size)
     words = text.split()
@@ -334,39 +481,35 @@ def build_host_pdf():
     buffer = BytesIO()
     pdf = canvas.Canvas(buffer, pagesize=letter)
     width, height = letter
-
-    def new_page(title):
-        pdf.showPage()
-        pdf.setFont("Helvetica-Bold", 16)
-        pdf.drawString(40, height - 40, title)
-
-    pdf.setTitle("Trivia with the GM - Host Sheet")
-    pdf.setFont("Helvetica-Bold", 18)
-    pdf.drawString(40, height - 40, "Trivia with the GM - Host Sheet")
     y = height - 70
 
-    for section_title, rounds in [("Game 1", st.session_state.game1), ("Game 2", st.session_state.game2)]:
+    pdf.setTitle("Trivia with the GM - Host Sheet")
+    pdf.setFont("Helvetica-Bold", 16)
+    pdf.drawString(40, height - 40, "Trivia with the GM - Host Sheet")
+
+    for game_title, rounds in [("Game 1", st.session_state.game1), ("Game 2", st.session_state.game2)]:
         if not rounds:
             continue
+
         if y < 120:
-            new_page("Trivia with the GM - Host Sheet")
+            pdf.showPage()
             y = height - 70
 
         pdf.setFont("Helvetica-Bold", 14)
-        pdf.drawString(40, y, section_title)
+        pdf.drawString(40, y, game_title)
         y -= 20
 
         for rnd in rounds:
             if y < 140:
-                new_page("Trivia with the GM - Host Sheet")
+                pdf.showPage()
                 y = height - 70
             pdf.setFont("Helvetica-Bold", 12)
-            pdf.drawString(40, y, f"{rnd['round_name']} ({rnd.get('round_difficulty', '')})")
+            pdf.drawString(40, y, f"{rnd['round_name']} ({rnd.get('round_difficulty','')})")
             y -= 18
 
             for idx, q in enumerate(rnd["questions"], start=1):
-                if y < 160:
-                    new_page("Trivia with the GM - Host Sheet")
+                if y < 180:
+                    pdf.showPage()
                     y = height - 70
 
                 pdf.setFont("Helvetica-Bold", 11)
@@ -375,6 +518,7 @@ def build_host_pdf():
 
                 y = draw_wrapped_text(pdf, f"Q: {q['question']}", 50, y, 510)
                 y = draw_wrapped_text(pdf, f"A: {q['answer']}", 50, y, 510)
+
                 if q.get("notes"):
                     y = draw_wrapped_text(pdf, f"Notes: {q['notes']}", 50, y, 510)
 
@@ -382,8 +526,8 @@ def build_host_pdf():
                     y = draw_wrapped_text(pdf, f"Song: {q.get('song','')}", 50, y, 510)
                     y = draw_wrapped_text(pdf, f"Writer(s): {q.get('writers','')}", 50, y, 510)
                     y = draw_wrapped_text(pdf, f"Performer: {q.get('performer','')}", 50, y, 510)
-                    y = draw_wrapped_text(pdf, f"Release date: {q.get('release_date','')}", 50, y, 510)
-                    y = draw_wrapped_text(pdf, f"Recommended clip length: {q.get('clip_length','')}", 50, y, 510)
+                    y = draw_wrapped_text(pdf, f"Release Date: {q.get('release_date','')}", 50, y, 510)
+                    y = draw_wrapped_text(pdf, f"Recommended Clip Length: {q.get('clip_length','')}", 50, y, 510)
 
                 if q.get("sources"):
                     y = draw_wrapped_text(pdf, "Sources:", 50, y, 510)
@@ -417,21 +561,25 @@ def build_score_sheet_pdf():
     ]
 
     for title, count in sections:
+        if y < 100:
+            pdf.showPage()
+            y = height - 50
         pdf.setFont("Helvetica-Bold", 12)
         pdf.drawString(40, y, title)
         y -= 18
         pdf.setFont("Helvetica", 11)
         for i in range(1, count + 1):
-            pdf.drawString(50, y, f"Question {i}: ______")
-            y -= 16
             if y < 80:
                 pdf.showPage()
                 y = height - 50
+            pdf.drawString(50, y, f"Question {i}: ______")
+            y -= 16
         pdf.drawString(50, y, "Round Total: ______")
         y -= 28
-        if y < 100:
-            pdf.showPage()
-            y = height - 50
+
+    if y < 80:
+        pdf.showPage()
+        y = height - 50
 
     pdf.setFont("Helvetica-Bold", 14)
     pdf.drawString(40, y, "Grand Total: ______")
@@ -439,6 +587,9 @@ def build_score_sheet_pdf():
     buffer.seek(0)
     return buffer
 
+# =========================================================
+# EDITORS
+# =========================================================
 def render_sources_editor(q, key_prefix):
     sources_text = "\n".join(q.get("sources", []))
     edited_sources = st.text_area(
@@ -449,7 +600,7 @@ def render_sources_editor(q, key_prefix):
     )
     q["sources"] = [line.strip() for line in edited_sources.split("\n") if line.strip()]
 
-def render_question_editor(round_data, round_index, q, q_idx, game_key):
+def render_question_editor(round_index, q, q_idx, game_key):
     prefix = f"{game_key}_{round_index}_{q_idx}"
 
     with st.expander(f"Q{q_idx + 1}: {q['category']} • {q.get('difficulty','')}", expanded=False):
@@ -486,12 +637,14 @@ def render_question_editor(round_data, round_index, q, q_idx, game_key):
             st.success(f"Answer: {q['answer']}")
             if q.get("notes"):
                 st.info(q["notes"])
+
             if q["category"] == "Name That Tune":
                 st.write(f"**Song:** {q.get('song', '')}")
                 st.write(f"**Writer(s):** {q.get('writers', '')}")
                 st.write(f"**Best Known Performer:** {q.get('performer', '')}")
                 st.write(f"**Release Date:** {q.get('release_date', '')}")
                 st.write(f"**Recommended Clip Length:** {q.get('clip_length', '')}")
+
             if q.get("sources"):
                 st.write("**Sources:**")
                 for s in q["sources"]:
@@ -501,7 +654,7 @@ def render_rounds(rounds, game_key):
     for r_idx, rnd in enumerate(rounds):
         st.markdown(f"## {rnd['round_name']} • Difficulty: {rnd.get('round_difficulty', 'n/a')}")
         for q_idx, q in enumerate(rnd["questions"]):
-            render_question_editor(rnd, r_idx, q, q_idx, game_key)
+            render_question_editor(r_idx, q, q_idx, game_key)
 
 # =========================================================
 # SIDEBAR
@@ -509,14 +662,17 @@ def render_rounds(rounds, game_key):
 st.sidebar.header("Controls")
 
 if st.sidebar.button("Generate Game 1"):
-    st.session_state.game1 = generate_game_1()
+    with st.spinner("Generating Game 1..."):
+        st.session_state.game1 = generate_game_1()
 
 if st.sidebar.button("Generate Game 2"):
-    st.session_state.game2 = generate_game_2()
+    with st.spinner("Generating Game 2..."):
+        st.session_state.game2 = generate_game_2()
 
 if st.sidebar.button("Generate Both Games"):
-    st.session_state.game1 = generate_game_1()
-    st.session_state.game2 = generate_game_2()
+    with st.spinner("Generating both games... this may take a moment."):
+        st.session_state.game1 = generate_game_1()
+        st.session_state.game2 = generate_game_2()
 
 if st.sidebar.button("Clear All"):
     st.session_state.game1 = []
@@ -550,8 +706,8 @@ st.sidebar.info("""
 Tips:
 - Round 1 is easier, Round 2 medium, Round 3 harder.
 - Game 2 mixes all difficulty levels.
-- Use Replace This Question to swap only one question.
-- Re-check time-sensitive topics before game night.
+- Replace regenerates only one question.
+- Review current events and music metadata before final use.
 """)
 
 # =========================================================
@@ -622,34 +778,27 @@ with tab5:
 ### How to use
 1. Click **Generate Both Games**
 2. Review each round
-3. Use **Replace This Question** if you do not like one
-4. Edit any text if needed
-5. Save the game set with a name
-6. Download the **Host PDF**
-7. Download the **Score Sheet PDF**
+3. Click **Replace This Question** if needed
+4. Edit any wording manually if desired
+5. Save the game
+6. Download the Host PDF and Score Sheets
 
-### Current events
-- This version uses curated current-events questions from `current_events.json`
-- Update that file before an event if you want fresher material
+### AI generation
+- This version uses **Gemini AI**
+- It tries to avoid repeating previously used questions
+- It stores used questions in `used_questions.json`
 
-### Name That Tune
-- This app provides:
-  - song
-  - writer(s)
-  - best known performer
-  - release date
-  - recommended opening clip length
-- You should play your own legal music clips during the event
+### Important review
+Please review before use, especially:
+- current events
+- sports current events
+- world records
+- Name That Tune writer / release date metadata
 
-### Previous games
-- Saved games are stored in the `saved_games` folder
-- On Streamlit Community Cloud, file storage may not be persistent long-term
-- For permanent archival, always download your JSON or PDFs
-
-### Source verification
-- Every starter question has at least one source
-- For changing topics like world records or current events, do a quick final fact check before use
+### Streamlit Cloud note
+File-based history and saves may not be permanently preserved forever on Community Cloud.
+For long-term recordkeeping, download JSON and PDFs.
 """)
 
 st.markdown("---")
-st.caption("Trivia with the GM • Version 3")
+st.caption("Trivia with the GM • Gemini AI Version")
