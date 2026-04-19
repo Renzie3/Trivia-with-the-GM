@@ -1,0 +1,782 @@
+{
+  "Geography": [
+    {
+      "difficulty": "easy",
+      "question": "What is the capital city of Australia?",
+      "answer": "Canberra",
+      "notes": "Common trick question.",
+      "sources": [
+        "https://www.britannica.com/place/Canberra",
+        "https://www.australia.gov.au/about-australia/our-country"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "What is the largest ocean on Earth?",
+      "answer": "The Pacific Ocean",
+      "notes": "",
+      "sources": [
+        "https://www.noaa.gov/education/resource-collections/ocean-coasts/ocean",
+        "https://www.britannica.com/place/Pacific-Ocean"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Mount Kilimanjaro is located in which country?",
+      "answer": "Tanzania",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/place/Mount-Kilimanjaro",
+        "https://whc.unesco.org/en/list/403/"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What river flows through Egypt and is one of the longest rivers in the world?",
+      "answer": "The Nile River",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/place/Nile-River",
+        "https://education.nationalgeographic.org/resource/nile-river/"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "What is the capital of Kazakhstan?",
+      "answer": "Astana",
+      "notes": "Formerly called Nur-Sultan for a period.",
+      "sources": [
+        "https://www.britannica.com/place/Astana",
+        "https://www.government.kz/en"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Which strait separates Asia from North America?",
+      "answer": "The Bering Strait",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/place/Bering-Strait",
+        "https://oceanservice.noaa.gov/facts/bering-strait.html"
+      ]
+    }
+  ],
+  "History": [
+    {
+      "difficulty": "easy",
+      "question": "In what year did the Berlin Wall fall?",
+      "answer": "1989",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/event/Berlin-Wall",
+        "https://www.history.com/topics/cold-war/berlin-wall"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "Who was the principal author of the Declaration of Independence?",
+      "answer": "Thomas Jefferson",
+      "notes": "",
+      "sources": [
+        "https://www.archives.gov/founding-docs/declaration-history",
+        "https://www.britannica.com/topic/Declaration-of-Independence"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Which civilization built Machu Picchu?",
+      "answer": "The Inca",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/place/Machu-Picchu",
+        "https://whc.unesco.org/en/list/274/"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Who was the British Prime Minister for most of World War II?",
+      "answer": "Winston Churchill",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/biography/Winston-Churchill",
+        "https://www.iwm.org.uk/history/winston-churchill"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "The Peace of Westphalia in 1648 helped end which major European conflict?",
+      "answer": "The Thirty Years' War",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/event/Peace-of-Westphalia",
+        "https://www.history.com/topics/reformation/thirty-years-war"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Who was the Carthaginian general who crossed the Alps during the Second Punic War?",
+      "answer": "Hannibal",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/biography/Hannibal-Carthaginian-general",
+        "https://www.history.com/topics/ancient-history/hannibal"
+      ]
+    }
+  ],
+  "American Current Events": [
+    {
+      "difficulty": "easy",
+      "question": "How long is a term for a member of the U.S. House of Representatives?",
+      "answer": "Two years",
+      "notes": "Stable civic fallback.",
+      "sources": [
+        "https://www.house.gov/the-house-explained",
+        "https://www.usa.gov/branches-of-government"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "What is the official residence of the President of the United States?",
+      "answer": "The White House",
+      "notes": "",
+      "sources": [
+        "https://www.whitehouse.gov/about-the-white-house/",
+        "https://www.britannica.com/topic/White-House"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Which branch of the U.S. government interprets laws?",
+      "answer": "The Judicial Branch",
+      "notes": "",
+      "sources": [
+        "https://www.usa.gov/branches-of-government",
+        "https://www.supremecourt.gov/about/constitutional.aspx"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "How many voting members are in the U.S. House of Representatives?",
+      "answer": "435",
+      "notes": "",
+      "sources": [
+        "https://www.house.gov/the-house-explained",
+        "https://www.census.gov/topics/public-sector/congressional-apportionment/about.html"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "What is the minimum age required by the U.S. Constitution to serve as President?",
+      "answer": "35",
+      "notes": "",
+      "sources": [
+        "https://constitution.congress.gov/constitution/article-2/",
+        "https://www.archives.gov/founding-docs/constitution-transcript"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "How many justices serve on the U.S. Supreme Court?",
+      "answer": "9",
+      "notes": "",
+      "sources": [
+        "https://www.supremecourt.gov/about/institution.aspx",
+        "https://www.usa.gov/branches-of-government"
+      ]
+    }
+  ],
+  "World Current Events": [
+    {
+      "difficulty": "easy",
+      "question": "In what city is the headquarters of the United Nations located?",
+      "answer": "New York City",
+      "notes": "",
+      "sources": [
+        "https://www.un.org/en/about-us/un-headquarters",
+        "https://www.britannica.com/topic/United-Nations"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "What organization is abbreviated WHO?",
+      "answer": "World Health Organization",
+      "notes": "",
+      "sources": [
+        "https://www.who.int/about",
+        "https://www.britannica.com/topic/World-Health-Organization"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What currency is used by many member states of the European Union?",
+      "answer": "The euro",
+      "notes": "",
+      "sources": [
+        "https://european-union.europa.eu/institutions-law-budget/euro_en",
+        "https://www.ecb.europa.eu/euro/html/index.en.html"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What is the name of the international court based in The Hague that settles legal disputes between states?",
+      "answer": "The International Court of Justice",
+      "notes": "",
+      "sources": [
+        "https://www.icj-cij.org/home",
+        "https://www.un.org/en/icj/"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "What intergovernmental military alliance is commonly abbreviated NATO?",
+      "answer": "North Atlantic Treaty Organization",
+      "notes": "",
+      "sources": [
+        "https://www.nato.int/cps/en/natohq/topics_52044.htm",
+        "https://www.britannica.com/topic/North-Atlantic-Treaty-Organization"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "What does IMF stand for in global finance?",
+      "answer": "International Monetary Fund",
+      "notes": "",
+      "sources": [
+        "https://www.imf.org/en/About/Factsheets/IMF-at-a-Glance",
+        "https://www.britannica.com/topic/International-Monetary-Fund"
+      ]
+    }
+  ],
+  "Health": [
+    {
+      "difficulty": "easy",
+      "question": "How many chambers does the human heart have?",
+      "answer": "Four",
+      "notes": "",
+      "sources": [
+        "https://medlineplus.gov/ency/anatomyvideos/000087.htm",
+        "https://my.clevelandclinic.org/health/body/21704-heart"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "Which vitamin is primarily produced when skin is exposed to sunlight?",
+      "answer": "Vitamin D",
+      "notes": "",
+      "sources": [
+        "https://ods.od.nih.gov/factsheets/VitaminD-Consumer/",
+        "https://medlineplus.gov/vitamind.html"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "The femur is a bone found in what part of the body?",
+      "answer": "The thigh or upper leg",
+      "notes": "",
+      "sources": [
+        "https://my.clevelandclinic.org/health/body/23303-femur",
+        "https://www.britannica.com/science/femur"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What blood type is often called the universal donor for red blood cells?",
+      "answer": "O negative",
+      "notes": "",
+      "sources": [
+        "https://www.redcrossblood.org/donate-blood/blood-types.html",
+        "https://www.nhlbi.nih.gov/health/blood-transfusion"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "What is the largest organ in the human body?",
+      "answer": "The skin",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/science/skin",
+        "https://my.clevelandclinic.org/health/body/10978-skin"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "What part of the brain is primarily associated with balance and coordination?",
+      "answer": "The cerebellum",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/science/cerebellum",
+        "https://my.clevelandclinic.org/health/body/22617-cerebellum"
+      ]
+    }
+  ],
+  "Movies": [
+    {
+      "difficulty": "easy",
+      "question": "Who directed the movie 'Jaws'?",
+      "answer": "Steven Spielberg",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/topic/Jaws-film-by-Spielberg",
+        "https://www.imdb.com/title/tt0073195/"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "In 'The Wizard of Oz,' what road does Dorothy follow?",
+      "answer": "The Yellow Brick Road",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/topic/The-Wizard-of-Oz-film-by-Fleming",
+        "https://www.imdb.com/title/tt0032138/"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Which film won the Academy Award for Best Picture for films released in 1994?",
+      "answer": "Forrest Gump",
+      "notes": "",
+      "sources": [
+        "https://www.oscars.org/oscars/ceremonies/1995",
+        "https://www.britannica.com/topic/Forrest-Gump-film"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Who played the title role in the 2000 film 'Gladiator'?",
+      "answer": "Russell Crowe",
+      "notes": "",
+      "sources": [
+        "https://www.imdb.com/title/tt0172495/",
+        "https://www.britannica.com/topic/Gladiator-film-by-Scott"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Which 1941 film is often cited as a landmark of American cinema and was directed by Orson Welles?",
+      "answer": "Citizen Kane",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/topic/Citizen-Kane-film",
+        "https://www.imdb.com/title/tt0033467/"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Who composed the famous film score for 'Star Wars'?",
+      "answer": "John Williams",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/biography/John-Williams-American-composer-and-conductor",
+        "https://www.starwars.com/"
+      ]
+    }
+  ],
+  "Television": [
+    {
+      "difficulty": "easy",
+      "question": "What coffee shop do the characters frequently visit in 'Friends'?",
+      "answer": "Central Perk",
+      "notes": "",
+      "sources": [
+        "https://www.imdb.com/title/tt0108778/",
+        "https://friends.fandom.com/wiki/Central_Perk"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "Which television series featured the character Don Draper?",
+      "answer": "Mad Men",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/topic/Mad-Men",
+        "https://www.imdb.com/title/tt0804503/"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "In the U.S. version of 'The Office,' in what Pennsylvania city is the branch located?",
+      "answer": "Scranton",
+      "notes": "",
+      "sources": [
+        "https://www.imdb.com/title/tt0386676/",
+        "https://theoffice.fandom.com/wiki/Scranton"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What is the name of the fictional continent where much of 'Game of Thrones' takes place?",
+      "answer": "Westeros",
+      "notes": "",
+      "sources": [
+        "https://www.hbo.com/game-of-thrones",
+        "https://gameofthrones.fandom.com/wiki/Westeros"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Which long-running sketch comedy series premiered on NBC in 1975?",
+      "answer": "Saturday Night Live",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/topic/Saturday-Night-Live",
+        "https://www.nbc.com/saturday-night-live"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Who created the television series 'The West Wing'?",
+      "answer": "Aaron Sorkin",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/biography/Aaron-Sorkin",
+        "https://www.imdb.com/title/tt0200276/"
+      ]
+    }
+  ],
+  "US Constitution": [
+    {
+      "difficulty": "easy",
+      "question": "How many amendments does the U.S. Constitution have?",
+      "answer": "27",
+      "notes": "",
+      "sources": [
+        "https://www.archives.gov/founding-docs/amendments-11-27",
+        "https://constitution.congress.gov/constitution/"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "Which amendment protects freedom of speech?",
+      "answer": "The First Amendment",
+      "notes": "",
+      "sources": [
+        "https://constitution.congress.gov/constitution/amendment-1/",
+        "https://www.archives.gov/founding-docs/bill-of-rights-transcript"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Which amendment protects against self-incrimination?",
+      "answer": "The Fifth Amendment",
+      "notes": "",
+      "sources": [
+        "https://constitution.congress.gov/constitution/amendment-5/",
+        "https://www.law.cornell.edu/constitution/fifth_amendment"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "How many senators does each state have in the U.S. Senate?",
+      "answer": "Two",
+      "notes": "",
+      "sources": [
+        "https://www.senate.gov/about/origins-foundations/senate-and-constitution/constitution.htm",
+        "https://constitution.congress.gov/constitution/article-1/"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "What is the constitutional method for removing a president from office through charges by the House and trial by the Senate?",
+      "answer": "Impeachment",
+      "notes": "",
+      "sources": [
+        "https://constitution.congress.gov/browse/essay/artII-S4-1/ALDE_00000282/",
+        "https://www.archives.gov/founding-docs/constitution-transcript"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Which article of the U.S. Constitution establishes the Judicial Branch?",
+      "answer": "Article III",
+      "notes": "",
+      "sources": [
+        "https://constitution.congress.gov/constitution/article-3/",
+        "https://www.supremecourt.gov/about/constitutional.aspx"
+      ]
+    }
+  ],
+  "Sports History": [
+    {
+      "difficulty": "easy",
+      "question": "Who was the first person to run a mile in under four minutes?",
+      "answer": "Roger Bannister",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/biography/Roger-Bannister",
+        "https://www.worldathletics.org/heritage/news/roger-bannister-sub-four-minute-mile-anniversary"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "Which boxer was known as 'The Greatest'?",
+      "answer": "Muhammad Ali",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/biography/Muhammad-Ali-boxer",
+        "https://www.ali.com/"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "In what year were the first modern Olympic Games held?",
+      "answer": "1896",
+      "notes": "",
+      "sources": [
+        "https://olympics.com/ioc/ancient-olympic-games/the-modern-games",
+        "https://www.britannica.com/sports/Olympic-Games"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What baseball player broke Major League Baseball's color barrier in 1947?",
+      "answer": "Jackie Robinson",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/biography/Jackie-Robinson",
+        "https://www.mlb.com/jackie-robinson"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Which golfer completed the 'Tiger Slam' by winning the 2001 Masters after holding the other three major titles?",
+      "answer": "Tiger Woods",
+      "notes": "",
+      "sources": [
+        "https://www.masters.com/en_US/history/records/champions/2001.html",
+        "https://www.britannica.com/biography/Tiger-Woods"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Which tennis player won the 'Golden Slam' in 1988 by capturing all four major singles titles and Olympic gold in the same year?",
+      "answer": "Steffi Graf",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/biography/Steffi-Graf",
+        "https://www.itftennis.com/en/news-and-media/articles/this-week-in-tennis-history-graf-completes-the-golden-slam/"
+      ]
+    }
+  ],
+  "Sports Current Events": [
+    {
+      "difficulty": "easy",
+      "question": "How many points is a touchdown worth in American football before the extra point attempt?",
+      "answer": "6",
+      "notes": "Reliable fallback rule question.",
+      "sources": [
+        "https://operations.nfl.com/learn-the-game/nfl-basics/",
+        "https://www.britannica.com/sports/gridiron-football"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "In golf, what term means one stroke under par on a hole?",
+      "answer": "Birdie",
+      "notes": "",
+      "sources": [
+        "https://www.usga.org/content/usga/home-page/rules-hub/topics/golf-glossary.html",
+        "https://www.britannica.com/sports/golf"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "How many players from one team are on the court at one time in an NBA game?",
+      "answer": "5",
+      "notes": "",
+      "sources": [
+        "https://official.nba.com/rule-no-1-court-dimensions-equipment/",
+        "https://www.britannica.com/sports/basketball"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "How many innings are in a regulation Major League Baseball game unless extra innings are required?",
+      "answer": "9",
+      "notes": "",
+      "sources": [
+        "https://www.mlb.com/glossary/rules/regulation-game",
+        "https://www.britannica.com/sports/baseball"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "In tennis scoring, what term is used for 40-40?",
+      "answer": "Deuce",
+      "notes": "",
+      "sources": [
+        "https://www.itftennis.com/en/about-us/organisation/tennis-glossary/",
+        "https://www.britannica.com/sports/tennis"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "In competitive swimming, how long is an Olympic-size pool?",
+      "answer": "50 meters",
+      "notes": "",
+      "sources": [
+        "https://www.worldaquatics.com/swimming/rules",
+        "https://www.britannica.com/sports/swimming-sport"
+      ]
+    }
+  ],
+  "World Records": [
+    {
+      "difficulty": "easy",
+      "question": "Who holds the men's 100-meter world record?",
+      "answer": "Usain Bolt",
+      "notes": "",
+      "sources": [
+        "https://worldathletics.org/records/by-discipline/sprints/100-metres/outdoor/men",
+        "https://www.britannica.com/biography/Usain-Bolt"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "What is the tallest mountain above sea level in the world?",
+      "answer": "Mount Everest",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/place/Mount-Everest",
+        "https://education.nationalgeographic.org/resource/mount-everest/"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Which animal is the tallest on Earth?",
+      "answer": "The giraffe",
+      "notes": "",
+      "sources": [
+        "https://nationalzoo.si.edu/animals/giraffe",
+        "https://www.britannica.com/animal/giraffe"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What is the largest desert in the world, including polar deserts?",
+      "answer": "Antarctica",
+      "notes": "Common trick question.",
+      "sources": [
+        "https://www.britannica.com/place/Antarctica",
+        "https://education.nationalgeographic.org/resource/deserts/"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "What is the deepest known part of Earth's oceans?",
+      "answer": "Challenger Deep in the Mariana Trench",
+      "notes": "",
+      "sources": [
+        "https://oceanservice.noaa.gov/facts/oceandepth.html",
+        "https://www.britannica.com/place/Mariana-Trench"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Which mammal is generally recognized as the largest living animal on Earth?",
+      "answer": "The blue whale",
+      "notes": "",
+      "sources": [
+        "https://www.britannica.com/animal/blue-whale",
+        "https://www.nationalgeographic.com/animals/mammals/facts/blue-whale"
+      ]
+    }
+  ],
+  "Name That Tune": [
+    {
+      "difficulty": "easy",
+      "question": "Name That Tune: Play the opening of this song.",
+      "answer": "Billie Jean",
+      "notes": "Accept the song title.",
+      "song": "Billie Jean",
+      "writers": "Michael Jackson",
+      "performer": "Michael Jackson",
+      "release_date": "January 2, 1983",
+      "clip_length": "5 seconds",
+      "sources": [
+        "https://www.britannica.com/topic/Billie-Jean",
+        "https://www.songhall.org/profile/Michael_Jackson",
+        "https://www.discogs.com/master/51993-Michael-Jackson-Billie-Jean"
+      ]
+    },
+    {
+      "difficulty": "easy",
+      "question": "Name That Tune: Play the opening of this song.",
+      "answer": "Sweet Caroline",
+      "notes": "Accept the song title.",
+      "song": "Sweet Caroline",
+      "writers": "Neil Diamond",
+      "performer": "Neil Diamond",
+      "release_date": "May 28, 1969",
+      "clip_length": "5 seconds",
+      "sources": [
+        "https://www.britannica.com/biography/Neil-Diamond",
+        "https://www.discogs.com/master/547163-Neil-Diamond-Sweet-Caroline-Good-Times-Never-Seemed-So-Good",
+        "https://www.songhall.org/profile/neil_diamond"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Name That Tune: Play the opening of this song.",
+      "answer": "Bohemian Rhapsody",
+      "notes": "Accept the song title.",
+      "song": "Bohemian Rhapsody",
+      "writers": "Freddie Mercury",
+      "performer": "Queen",
+      "release_date": "October 31, 1975",
+      "clip_length": "4 seconds",
+      "sources": [
+        "https://www.britannica.com/topic/Bohemian-Rhapsody-song-by-Queen",
+        "https://www.queenonline.com/",
+        "https://www.discogs.com/master/5274-Queen-Bohemian-Rhapsody"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "Name That Tune: Play the opening of this song.",
+      "answer": "Hey Ya!",
+      "notes": "Accept the song title.",
+      "song": "Hey Ya!",
+      "writers": "André 3000",
+      "performer": "Outkast",
+      "release_date": "September 9, 2003",
+      "clip_length": "3 seconds",
+      "sources": [
+        "https://www.britannica.com/topic/Outkast",
+        "https://www.discogs.com/master/103780-Outkast-Hey-Ya",
+        "https://www.songhall.org/profile/andre_3000"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Name That Tune: Play the opening of this song.",
+      "answer": "I Will Always Love You",
+      "notes": "Refers to the best-known Whitney Houston recording.",
+      "song": "I Will Always Love You",
+      "writers": "Dolly Parton",
+      "performer": "Whitney Houston",
+      "release_date": "November 3, 1992",
+      "clip_length": "6 seconds",
+      "sources": [
+        "https://www.britannica.com/topic/I-Will-Always-Love-You-song",
+        "https://www.songhall.org/profile/Dolly_Parton",
+        "https://www.discogs.com/master/79719-Whitney-Houston-I-Will-Always-Love-You"
+      ]
+    },
+    {
+      "difficulty": "hard",
+      "question": "Name That Tune: Play the opening of this song.",
+      "answer": "Smells Like Teen Spirit",
+      "notes": "Accept the song title.",
+      "song": "Smells Like Teen Spirit",
+      "writers": "Kurt Cobain, Krist Novoselic, Dave Grohl",
+      "performer": "Nirvana",
+      "release_date": "September 10, 1991",
+      "clip_length": "4 seconds",
+      "sources": [
+        "https://www.britannica.com/topic/Nirvana-American-band",
+        "https://www.discogs.com/master/13866-Nirvana-Smells-Like-Teen-Spirit",
+        "https://www.songhall.org/profile/kurt_cobain"
+      ]
+    }
+  ]
+}

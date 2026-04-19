@@ -1,0 +1,68 @@
+{
+  "American Current Events": [
+    {
+      "difficulty": "easy",
+      "question": "What is the current length of a U.S. presidential term?",
+      "answer": "Four years",
+      "notes": "Use as stable current-events-adjacent civic content.",
+      "sources": [
+        "https://constitution.congress.gov/constitution/amendment-20/",
+        "https://www.archives.gov/founding-docs/amendments-11-27"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What is the minimum age to serve in the U.S. Senate?",
+      "answer": "30",
+      "notes": "",
+      "sources": [
+        "https://constitution.congress.gov/constitution/article-1/",
+        "https://www.senate.gov/about/origins-foundations/senate-and-constitution/constitution.htm"
+      ]
+    }
+  ],
+  "World Current Events": [
+    {
+      "difficulty": "easy",
+      "question": "What does UN stand for in international affairs?",
+      "answer": "United Nations",
+      "notes": "",
+      "sources": [
+        "https://www.un.org/en/about-us",
+        "https://www.britannica.com/topic/United-Nations"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "What does WHO stand for in global public health?",
+      "answer": "World Health Organization",
+      "notes": "",
+      "sources": [
+        "https://www.who.int/about",
+        "https://www.britannica.com/topic/World-Health-Organization"
+      ]
+    }
+  ],
+  "Sports Current Events": [
+    {
+      "difficulty": "easy",
+      "question": "In golf, what score is one stroke below par on a hole?",
+      "answer": "Birdie",
+      "notes": "",
+      "sources": [
+        "https://www.usga.org/content/usga/home-page/rules-hub/topics/golf-glossary.html",
+        "https://www.britannica.com/sports/golf"
+      ]
+    },
+    {
+      "difficulty": "medium",
+      "question": "In tennis, what is the term for a score of zero?",
+      "answer": "Love",
+      "notes": "",
+      "sources": [
+        "https://www.itftennis.com/en/about-us/organisation/tennis-glossary/",
+        "https://www.britannica.com/sports/tennis"
+      ]
+    }
+  ]
+}
